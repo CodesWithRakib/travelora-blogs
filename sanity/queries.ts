@@ -41,3 +41,10 @@ export const postBySlugQuery = groq`
 export const postSlugsQuery = groq`
   *[_type == "post" && defined(slug.current)][].slug.current
 `;
+
+export const paginatedPostsQuery = groq`
+  *[_type == "post"]
+  | order(publishedAt desc)[$start...$end] {
+    ${postFields}
+  }
+`;

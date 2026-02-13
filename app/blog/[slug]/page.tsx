@@ -33,7 +33,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-
   if (!post) return {};
 
   const imageUrl = post.mainImage
@@ -51,19 +50,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.publishedAt,
       authors: post.author ? [post.author.name] : [],
     },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
-      images: imageUrl ? [imageUrl] : [],
-    },
   };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPost(slug);
-
   if (!post) notFound();
 
   const readingTime = Math.ceil(
@@ -83,9 +75,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <article className="pb-20">
-      {/* Hero Image */}
       {post.mainImage && (
-        <div className="relative h-[60vh] min-h-[500px] w-full bg-gray-100">
+        <div className="relative h-[60vh] min-h-[500px] w-full bg-muted">
           <Image
             src={urlFor(post.mainImage).width(2000).height(1200).url()}
             alt={post.mainImage.alt || post.title}
@@ -94,31 +85,31 @@ export default async function BlogPostPage({ params }: Props) {
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
         </div>
       )}
 
       <Container className="max-w-3xl -mt-32 relative z-10">
-        {/* Header Card */}
-        <div className="bg-white rounded-lg shadow-lg p-8 md:p-12">
-          {/* Categories */}
+        <div className="bg-background border border-border p-8 md:p-12">
           {post.categories && post.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
               {post.categories.map((category) => (
-                <Badge key={category.title} variant="secondary">
+                <Badge
+                  key={category.title}
+                  variant="outline"
+                  className="border-border"
+                >
                   {category.title}
                 </Badge>
               ))}
             </div>
           )}
 
-          {/* Title */}
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">
             {post.title}
           </h1>
 
-          {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               <time dateTime={post.publishedAt}>
@@ -135,36 +126,37 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Author */}
           {post.author && (
             <>
               <Separator className="my-6" />
               <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12">
+                <Avatar className="h-12 w-12 border border-border">
                   {post.author.image && (
                     <AvatarImage
                       src={urlFor(post.author.image).width(48).height(48).url()}
                     />
                   )}
-                  <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-muted-foreground">
+                    {post.author.name.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{post.author.name}</p>
-                  <p className="text-sm text-gray-600">Author</p>
+                  <p className="font-medium text-foreground">
+                    {post.author.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Author</p>
                 </div>
               </div>
             </>
           )}
         </div>
 
-        {/* Excerpt */}
-        <div className="mt-12 p-8 bg-gray-50 rounded-lg border-l-4 border-gray-300">
-          <p className="text-xl text-gray-700 italic leading-relaxed">
+        <div className="mt-12 p-8 bg-muted border-l-4 border-foreground/20">
+          <p className="text-xl text-muted-foreground italic leading-relaxed">
             {post.excerpt}
           </p>
         </div>
 
-        {/* Content */}
         <div className="mt-12 prose prose-lg max-w-none prose-custom">
           <PortableText value={post.body} components={RichText} />
         </div>

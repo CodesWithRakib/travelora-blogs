@@ -1,4 +1,3 @@
-// Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -50,9 +49,9 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
+                    "relative px-4 py-2 text-sm font-medium rounded-md transition-colors",
                     isActive
-                      ? "text-foreground after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-foreground after:rounded-full after:content-['']"
+                      ? "text-foreground after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-foreground after:rounded-full"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                   )}
                 >
@@ -77,15 +76,12 @@ export function Header() {
 
             <SheetContent side="right" className="w-full sm:w-80 p-0">
               <div className="flex flex-col h-full">
-                {/* Header */}
-                <div className="flex items-center justify-between border-b px-6 py-4">
-                  <SheetTitle className="text-xl font-light tracking-tight">
+                <div className="border-b px-6 py-4">
+                  <SheetTitle className="text-left text-xl font-light tracking-tight">
                     Travelora
                   </SheetTitle>
-                  {/* shadcn's built-in close icon is automatically added here */}
                 </div>
 
-                {/* Navigation */}
                 <nav className="flex-1 px-4 py-8">
                   <div className="space-y-1">
                     {navItems.map((item) => {
@@ -95,10 +91,10 @@ export function Header() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "flex items-center px-4 py-3.5 text-base font-medium rounded-lg transition-all duration-200",
+                              "flex items-center px-4 py-3 text-base font-medium rounded-md transition-colors",
                               isActive
-                                ? "bg-accent text-foreground border-l-4 border-foreground"
-                                : "text-muted-foreground hover:text-foreground hover:bg-accent/70",
+                                ? "bg-accent text-accent-foreground"
+                                : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                             )}
                           >
                             {item.label}
@@ -106,30 +102,22 @@ export function Header() {
                         </SheetTrigger>
                       );
                     })}
-                  </div>
-
-                  {/* Quick Links */}
-                  <div className="mt-12 pt-8 border-t">
-                    <p className="px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground/70 mb-3">
-                      Quick links
-                    </p>
-                    <div className="space-y-1">
+                    <SheetTrigger asChild>
                       <Link
                         href="/"
                         className={cn(
-                          "flex items-center px-4 py-3 text-sm rounded-lg transition-colors",
+                          "flex items-center px-4 py-3 text-base font-medium rounded-md transition-colors md:hidden",
                           pathname === "/"
-                            ? "bg-accent text-foreground border-l-4 border-foreground"
-                            : "text-muted-foreground hover:text-foreground hover:bg-accent/70",
+                            ? "bg-accent text-accent-foreground"
+                            : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                         )}
                       >
                         Home
                       </Link>
-                    </div>
+                    </SheetTrigger>
                   </div>
                 </nav>
 
-                {/* Footer */}
                 <div className="border-t px-6 py-4">
                   <p className="text-xs text-muted-foreground">
                     © {new Date().getFullYear()} Travelora
