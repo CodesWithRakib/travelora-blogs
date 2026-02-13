@@ -29,7 +29,7 @@ export default async function BlogPage() {
   return (
     <Container>
       {/* Header */}
-      <div className="py-16 md:py-20 text-center md:text-left">
+      <div className="py-16 text-center md:text-left">
         <Badge variant="secondary" className="mb-6">
           Blog
         </Badge>

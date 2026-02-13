@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <Container className="max-w-4xl py-16 md:py-24">
+    <Container className="max-w-4xl py-16 ">
       {/* Header */}
       <div className="text-center mb-12">
         <Badge variant="secondary" className="mb-6">

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <Container className="max-w-4xl py-16 md:py-24">
+    <Container className="max-w-4xl py-16">
       {/* Header */}
       <div className="text-center mb-12">
         <Badge variant="secondary" className="mb-6">
@@ -34,7 +34,7 @@ export default function AboutPage() {
         <CardContent className="p-8 md:p-12">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             <Avatar className="h-32 w-32 md:h-40 md:w-40">
-              <AvatarImage src="/profile.jpg" />
+              <AvatarImage src="/profile.jpeg" />
               <AvatarFallback className="text-4xl">A</AvatarFallback>
             </Avatar>
 
