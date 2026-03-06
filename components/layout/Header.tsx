@@ -1,3 +1,4 @@
+// components/layout/Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -12,6 +13,10 @@ import {
 } from "@/components/ui/sheet";
 import Container from "../ui/Container";
 import { cn } from "@/lib/utils";
+
+// === CONFIGURATION – change this value to update site name everywhere ===
+const SITE_NAME = "goshomik";
+// ========================================================================
 
 export function Header() {
   const pathname = usePathname();
@@ -34,9 +39,10 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center transition-opacity hover:opacity-75"
+            aria-label={`${SITE_NAME} homepage`}
           >
             <span className="text-xl font-light tracking-tight text-foreground">
-              Travelora
+              {SITE_NAME}
             </span>
           </Link>
 
@@ -54,6 +60,7 @@ export function Header() {
                       ? "text-foreground after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-foreground after:rounded-full"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                   )}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   {item.label}
                 </Link>
@@ -68,9 +75,9 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 className="shrink-0 hover:bg-accent"
+                aria-label="Open menu"
               >
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
 
@@ -78,7 +85,7 @@ export function Header() {
               <div className="flex flex-col h-full">
                 <div className="border-b px-6 py-4">
                   <SheetTitle className="text-left text-xl font-light tracking-tight">
-                    Travelora
+                    {SITE_NAME}
                   </SheetTitle>
                 </div>
 
@@ -96,6 +103,7 @@ export function Header() {
                                 ? "bg-accent text-accent-foreground"
                                 : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                             )}
+                            aria-current={isActive ? "page" : undefined}
                           >
                             {item.label}
                           </Link>
@@ -111,6 +119,7 @@ export function Header() {
                             ? "bg-accent text-accent-foreground"
                             : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                         )}
+                        aria-current={pathname === "/" ? "page" : undefined}
                       >
                         Home
                       </Link>
@@ -120,7 +129,7 @@ export function Header() {
 
                 <div className="border-t px-6 py-4">
                   <p className="text-xs text-muted-foreground">
-                    © {new Date().getFullYear()} Travelora
+                    © {new Date().getFullYear()} {SITE_NAME}
                   </p>
                 </div>
               </div>

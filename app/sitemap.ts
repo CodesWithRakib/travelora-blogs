@@ -3,7 +3,7 @@ import { postSlugsQuery } from "@/sanity/queries";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://travelora.com";
+  const baseUrl = "https://goshomik.com";
 
   const slugs = await client.fetch<string[]>(postSlugsQuery);
 

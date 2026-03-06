@@ -1,5 +1,7 @@
+// app/page.tsx
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,6 +13,11 @@ import { urlFor } from "@/sanity/lib/image";
 import Container from "@/components/ui/Container";
 import { Card, CardContent, CardFooter } from "@/components/ui/Card";
 
+// === CONFIGURATION – change these values easily ===
+const SITE_NAME = "goshomik"; // Used in structured data & potential UI text
+const BASE_URL = "https://goshomik.com"; // Used for canonical URLs in structured data
+// =================================================
+
 export const revalidate = 60;
 
 async function getPosts(): Promise<PostPreview[]> {
@@ -20,16 +27,47 @@ async function getPosts(): Promise<PostPreview[]> {
 export default async function Home() {
   const posts = await getPosts();
 
+  // Generate structured data (JSON‑LD) for the blog listing
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: SITE_NAME,
+    url: BASE_URL,
+    description: "Personal travel journal and stories from around the world.",
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      url: `${BASE_URL}/blog/${post.slug}`,
+      datePublished: post.publishedAt,
+      description: post.excerpt,
+      ...(post.mainImage && {
+        image: {
+          "@type": "ImageObject",
+          url: urlFor(post.mainImage).width(1200).url(),
+        },
+      }),
+      author: post.author
+        ? {
+            "@type": "Person",
+            name: post.author.name,
+          }
+        : undefined,
+    })),
+  };
+
   return (
     <>
-      {/* Hero */}
-      <section className="border-b border-border">
-        <Container className="py-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      {/* Hero Section */}
+      <section
+        className="border-b border-border bg-background"
+        aria-label="Introduction"
+      >
+        <Container className="py-10 md:py-16">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <Badge
                 variant="outline"
-                className="w-fit px-4 py-1.5 text-xs font-medium uppercase tracking-wider border-border text-muted-foreground"
+                className="w-fit px-4 py-1.5 text-xs font-medium uppercase tracking-wider border-accent/20 bg-accent/5 text-accent-foreground"
               >
                 <Compass className="w-3.5 h-3.5 mr-1.5 inline-block" />
                 Travel Stories
@@ -52,7 +90,7 @@ export default async function Home() {
                 <Button
                   size="lg"
                   asChild
-                  className="bg-foreground text-background hover:bg-foreground/90  px-8 rounded-full"
+                  className="bg-foreground text-background hover:bg-foreground/90 px-8 rounded-full"
                 >
                   <Link href="/blog">
                     Start Reading
@@ -70,9 +108,9 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Quote box */}
+            {/* Quote box – visible only on large screens */}
             <div className="hidden lg:flex flex-col items-center justify-center">
-              <div className="border border-border p-8 max-w-xs">
+              <div className="border border-accent/20 p-8 max-w-xs bg-accent/5">
                 <p className="text-4xl font-light text-foreground mb-4">
                   &quot;
                 </p>
@@ -89,18 +127,24 @@ export default async function Home() {
         </Container>
       </section>
 
-      {/* Latest Posts */}
-      <section className="py-20 bg-background">
+      {/* Latest Posts Section */}
+      <section
+        className="py-20 bg-background"
+        aria-labelledby="latest-posts-heading"
+      >
         <Container>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-4">
             <div className="space-y-4 max-w-2xl">
               <Badge
                 variant="outline"
-                className="w-fit px-4 py-1.5 text-xs font-medium uppercase tracking-wider border-border text-muted-foreground"
+                className="w-fit px-4 py-1.5 text-xs font-medium uppercase tracking-wider border-accent/20 bg-accent/5 text-accent-foreground"
               >
                 Recent adventures
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-light text-foreground">
+              <h2
+                id="latest-posts-heading"
+                className="text-3xl md:text-4xl font-light text-foreground"
+              >
                 Latest stories from the road
               </h2>
               <p className="text-muted-foreground">
@@ -110,7 +154,7 @@ export default async function Home() {
             <Button
               variant="ghost"
               asChild
-              className="group gap-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-none px-4"
+              className="group gap-2 text-muted-foreground hover:text-accent-foreground hover:bg-accent/20 rounded-none px-4"
             >
               <Link href="/blog">
                 View all posts
@@ -124,7 +168,7 @@ export default async function Home() {
               {posts.map((post, index) => (
                 <Card
                   key={post._id}
-                  className="group hover:border-foreground/20 transition-colors p-0 overflow-hidden"
+                  className="group hover:border-foreground/20 hover:shadow-lg transition-all duration-300 p-0 overflow-hidden"
                 >
                   <Link href={`/blog/${post.slug}`} className="block h-full">
                     <div className="relative aspect-[16/9] border-b border-border bg-muted overflow-hidden">
@@ -139,7 +183,7 @@ export default async function Home() {
                           fill
                           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                          priority={index < 3}
+                          priority={index < 3} // lazy load others
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -205,7 +249,8 @@ export default async function Home() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 border border-border bg-muted">
+            // Empty state – visually consistent with cards
+            <div className="text-center py-20 border border-border bg-muted/30 rounded-lg">
               <Compass className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-lg text-muted-foreground mb-2">No posts yet</p>
               <p className="text-sm text-muted-foreground/70">
@@ -215,6 +260,13 @@ export default async function Home() {
           )}
         </Container>
       </section>
+
+      {/* Structured data for SEO */}
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
     </>
   );
 }

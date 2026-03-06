@@ -1,7 +1,10 @@
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
+// components/layout/Footer.tsx
 import { Twitter, Instagram, Github } from "lucide-react";
 import Container from "../ui/Container";
+
+// === CONFIGURATION – change this value to update site name everywhere ===
+const SITE_NAME = "goshomik";
+// ========================================================================
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -36,7 +39,7 @@ export function Footer() {
         <div className="py-8">
           <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
             <p className="text-xs text-muted-foreground order-2 md:order-1">
-              © {currentYear} Travelora. All rights reserved.
+              © {currentYear} {SITE_NAME}. All rights reserved.
             </p>
 
             <div className="flex items-center gap-4 order-1 md:order-2">

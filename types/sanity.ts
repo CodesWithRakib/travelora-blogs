@@ -28,6 +28,7 @@ export interface Post {
   excerpt: string;
   categories?: Category[];
   publishedAt: string;
+  _updatedAt?: string;
   body: PortableTextBlock[];
 }
 
